@@ -581,37 +581,319 @@ button, input, select {
   color: var(--text-muted);
 }
 
+/* ==========================================================================
+   PREVIEW DA FOTO ENQUADRADA NO FORMULÁRIO
+   ========================================================================== */
 .preview-box {
   display: none;
   position: relative;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
   margin-top: 10px;
-  max-height: 240px;
   background: #000;
+  border: 1px solid var(--border-subtle);
 }
 
 .preview-box img {
   width: 100%;
-  height: 240px;
+  max-height: 280px;
   object-fit: cover;
   display: block;
 }
 
-.btn-trash-photo {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(0, 0, 0, 0.75);
-  border: none;
-  color: #fff;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+.preview-actions-bar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(16, 16, 20, 0.95);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.btn-preview-action {
+  flex: 1;
+  background: #24242d;
+  color: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  font-family: var(--font-family);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-preview-action:active {
+  background: var(--cps-red);
+  border-color: var(--cps-red);
+  transform: scale(0.98);
+}
+
+.btn-preview-danger {
+  color: #ff6b6b;
+}
+
+.btn-preview-danger:active {
+  background: rgba(255, 107, 107, 0.15);
+  color: #ff8787;
+}
+
+/* ==========================================================================
+   MODAL DE AJUSTE E ENQUADRAMENTO (CROPPER MOBILE FIRST)
+   ========================================================================== */
+.modal-crop-sheet {
+  max-height: 94vh !important;
+  background: #111116;
+}
+
+.crop-modal-inner {
+  padding: 14px 16px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.crop-instructions-bar {
+  background: #181820;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-gray);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* Viewport com Proporção 4:5 */
+.crop-viewport-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.crop-viewport {
+  position: relative;
+  width: min(280px, 76vw);
+  aspect-ratio: 4 / 5;
+  background-color: #050507;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+.crop-viewport:active {
+  cursor: grabbing;
+}
+
+#cropImage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  will-change: transform;
+}
+
+/* Moldura e Grid no estilo Viewfinder Profissional */
+.crop-viewfinder-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 2px solid rgba(178, 31, 36, 0.85);
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.crop-ratio-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 3px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Cantos estilizados em vermelho institucional */
+.crop-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: var(--cps-red);
+  border-style: solid;
+}
+
+.crop-corner.top-left {
+  top: -2px;
+  left: -2px;
+  border-width: 3px 0 0 3px;
+  border-top-left-radius: 10px;
+}
+
+.crop-corner.top-right {
+  top: -2px;
+  right: -2px;
+  border-width: 3px 3px 0 0;
+  border-top-right-radius: 10px;
+}
+
+.crop-corner.bottom-left {
+  bottom: -2px;
+  left: -2px;
+  border-width: 0 0 3px 3px;
+  border-bottom-left-radius: 10px;
+}
+
+.crop-corner.bottom-right {
+  bottom: -2px;
+  right: -2px;
+  border-width: 0 3px 3px 0;
+  border-bottom-right-radius: 10px;
+}
+
+/* Linhas dos terços da câmera (grid suave) */
+.crop-grid-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.crop-grid-line.h1 { top: 33.33%; left: 0; right: 0; height: 1px; }
+.crop-grid-line.h2 { top: 66.66%; left: 0; right: 0; height: 1px; }
+.crop-grid-line.v1 { left: 33.33%; top: 0; bottom: 0; width: 1px; }
+.crop-grid-line.v2 { left: 66.66%; top: 0; bottom: 0; width: 1px; }
+
+/* Controles de Zoom */
+.crop-controls-group {
+  background: #16161c;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.crop-zoom-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-gray);
+}
+
+.crop-zoom-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-zoom-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #22222a;
+  border: 1px solid var(--border-subtle);
+  color: #fff;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.btn-zoom-circle:active {
+  background: var(--cps-red);
+  transform: scale(0.95);
+}
+
+.crop-range-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: #282834;
+  border-radius: 3px;
+  outline: none;
+}
+
+.crop-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--cps-red);
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.crop-range-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--cps-red);
+  border: 2px solid #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Ações Rápidas (Girar e Centralizar) */
+.crop-quick-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-crop-secondary {
+  flex: 1;
+  background: #1c1c24;
+  color: #ffffff;
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-family);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.15s ease;
+}
+
+.btn-crop-secondary:active {
+  background: #282834;
+  transform: scale(0.98);
+}
+
+/* Rodapé do Modal de Enquadramento */
+.crop-modal-footer {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
 }
 
 .btn-cps-primary {

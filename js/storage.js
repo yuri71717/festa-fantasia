@@ -266,4 +266,5 @@ class FantasiaDB {
 }
 
 FantasiaDB.init();
+window.FantasiaDB = FantasiaDB;
 window.HalloweenDB = FantasiaDB;

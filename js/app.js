@@ -231,7 +231,10 @@ function closeModal(id) {
   const modal = document.getElementById(id);
   if (modal) {
     modal.classList.remove('active');
-    document.body.style.overflow = '';
+    const otherActive = document.querySelector('.modal-overlay.active');
+    if (!otherActive) {
+      document.body.style.overflow = '';
+    }
   }
 }
 
@@ -244,6 +247,9 @@ function resetRegisterForm() {
   const form = document.getElementById('formRegister');
   if (form) form.reset();
   selectedPhotoBase64 = null;
+
+  const fileInput = document.getElementById('costumePhotoInput');
+  if (fileInput) fileInput.value = '';
 
   const previewBox = document.getElementById('previewBox');
   const uploadPrompt = document.getElementById('uploadPrompt');
@@ -275,12 +281,13 @@ function setupEventListeners() {
     });
   }
 
-  // Upload de Foto
+  // Upload e Ajuste de Foto (Cropper)
   const fileInput = document.getElementById('costumePhotoInput');
   const uploadCard = document.getElementById('uploadCard');
   const previewBox = document.getElementById('previewBox');
   const previewImg = document.getElementById('previewImg');
   const uploadPrompt = document.getElementById('uploadPrompt');
+  const btnAdjustPhoto = document.getElementById('btnAdjustPhoto');
   const btnRemovePhoto = document.getElementById('btnRemovePhoto');
 
   if (uploadCard && fileInput) {
@@ -288,7 +295,7 @@ function setupEventListeners() {
   }
 
   if (fileInput) {
-    fileInput.addEventListener('change', async (e) => {
+    fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
 
@@ -297,19 +304,53 @@ function setupEventListeners() {
         return;
       }
 
-      showToast('Processando foto...');
-      try {
-        const compressed = await FantasiaDB.compressImage(file);
-        selectedPhotoBase64 = compressed;
-        if (previewImg) previewImg.src = compressed;
-        if (previewBox) previewBox.style.display = 'block';
-        if (uploadPrompt) uploadPrompt.style.display = 'none';
-      } catch (err) {
-        showToast('Erro ao carregar foto: ' + err.message);
+      showToast('Abrindo ajuste da foto...');
+      PhotoCropper.open(
+        file,
+        (croppedBase64) => {
+          selectedPhotoBase64 = croppedBase64;
+          if (previewImg) previewImg.src = croppedBase64;
+          if (previewBox) previewBox.style.display = 'block';
+          if (uploadPrompt) uploadPrompt.style.display = 'none';
+          showToast('Foto enquadrada com sucesso!');
+        },
+        () => {
+          if (!selectedPhotoBase64) {
+            fileInput.value = '';
+          }
+        }
+      );
+    });
+  }
+
+  // Botão para Reajustar a foto atual
+  if (btnAdjustPhoto) {
+    btnAdjustPhoto.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const rawImg = PhotoCropper.getRawImage();
+      if (rawImg) {
+        PhotoCropper.open(
+          rawImg,
+          (croppedBase64) => {
+            selectedPhotoBase64 = croppedBase64;
+            if (previewImg) previewImg.src = croppedBase64;
+            showToast('Ajuste atualizado!');
+          }
+        );
+      } else if (fileInput && fileInput.files && fileInput.files[0]) {
+        PhotoCropper.open(
+          fileInput.files[0],
+          (croppedBase64) => {
+            selectedPhotoBase64 = croppedBase64;
+            if (previewImg) previewImg.src = croppedBase64;
+            showToast('Ajuste atualizado!');
+          }
+        );
       }
     });
   }
 
+  // Botão para Trocar / Remover Foto
   if (btnRemovePhoto) {
     btnRemovePhoto.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -317,6 +358,10 @@ function setupEventListeners() {
       if (fileInput) fileInput.value = '';
       if (previewBox) previewBox.style.display = 'none';
       if (uploadPrompt) uploadPrompt.style.display = 'block';
+      // Abre o seletor para escolher outra foto imediatamente
+      setTimeout(() => {
+        if (fileInput) fileInput.click();
+      }, 150);
     });
   }
 
@@ -392,8 +437,15 @@ function setupEventListeners() {
   document.querySelectorAll('.modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) {
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
+        if (overlay.id === 'cropModal') {
+          PhotoCropper.cancel();
+        } else {
+          overlay.classList.remove('active');
+          const otherActive = document.querySelector('.modal-overlay.active');
+          if (!otherActive) {
+            document.body.style.overflow = '';
+          }
+        }
       }
     });
   });
