@@ -246,15 +246,13 @@ function openRegisterModal() {
 function resetRegisterForm() {
   const form = document.getElementById('formRegister');
   if (form) form.reset();
-  selectedPhotoBase64 = null;
 
   const fileInput = document.getElementById('costumePhotoInput');
   if (fileInput) fileInput.value = '';
 
-  const previewBox = document.getElementById('previewBox');
-  const uploadPrompt = document.getElementById('uploadPrompt');
-  if (previewBox) previewBox.style.display = 'none';
-  if (uploadPrompt) uploadPrompt.style.display = 'block';
+  if (typeof PhotoEditor !== 'undefined') {
+    PhotoEditor.reset();
+  }
 }
 
 /**
@@ -281,21 +279,24 @@ function setupEventListeners() {
     });
   }
 
-  // Upload e Ajuste de Foto (Cropper)
+  // Upload e Editor Interativo de Foto
   const fileInput = document.getElementById('costumePhotoInput');
-  const uploadCard = document.getElementById('uploadCard');
-  const previewBox = document.getElementById('previewBox');
-  const previewImg = document.getElementById('previewImg');
   const uploadPrompt = document.getElementById('uploadPrompt');
-  const btnAdjustPhoto = document.getElementById('btnAdjustPhoto');
-  const btnRemovePhoto = document.getElementById('btnRemovePhoto');
+  const btnChangePhoto = document.getElementById('btnChangePhoto');
 
-  if (uploadCard && fileInput) {
-    uploadCard.addEventListener('click', () => fileInput.click());
+  if (uploadPrompt && fileInput) {
+    uploadPrompt.addEventListener('click', () => fileInput.click());
+  }
+
+  if (btnChangePhoto && fileInput) {
+    btnChangePhoto.addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput.click();
+    });
   }
 
   if (fileInput) {
-    fileInput.addEventListener('change', (e) => {
+    fileInput.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
 
@@ -304,64 +305,13 @@ function setupEventListeners() {
         return;
       }
 
-      showToast('Abrindo ajuste da foto...');
-      PhotoCropper.open(
-        file,
-        (croppedBase64) => {
-          selectedPhotoBase64 = croppedBase64;
-          if (previewImg) previewImg.src = croppedBase64;
-          if (previewBox) previewBox.style.display = 'block';
-          if (uploadPrompt) uploadPrompt.style.display = 'none';
-          showToast('Foto enquadrada com sucesso!');
-        },
-        () => {
-          if (!selectedPhotoBase64) {
-            fileInput.value = '';
-          }
-        }
-      );
-    });
-  }
-
-  // Botão para Reajustar a foto atual
-  if (btnAdjustPhoto) {
-    btnAdjustPhoto.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const rawImg = PhotoCropper.getRawImage();
-      if (rawImg) {
-        PhotoCropper.open(
-          rawImg,
-          (croppedBase64) => {
-            selectedPhotoBase64 = croppedBase64;
-            if (previewImg) previewImg.src = croppedBase64;
-            showToast('Ajuste atualizado!');
-          }
-        );
-      } else if (fileInput && fileInput.files && fileInput.files[0]) {
-        PhotoCropper.open(
-          fileInput.files[0],
-          (croppedBase64) => {
-            selectedPhotoBase64 = croppedBase64;
-            if (previewImg) previewImg.src = croppedBase64;
-            showToast('Ajuste atualizado!');
-          }
-        );
+      showToast('Carregando foto...');
+      try {
+        await PhotoEditor.loadImage(file);
+        showToast('Foto carregada! Arraste para posicionar.');
+      } catch (err) {
+        showToast('Erro ao abrir foto: ' + err.message);
       }
-    });
-  }
-
-  // Botão para Trocar / Remover Foto
-  if (btnRemovePhoto) {
-    btnRemovePhoto.addEventListener('click', (e) => {
-      e.stopPropagation();
-      selectedPhotoBase64 = null;
-      if (fileInput) fileInput.value = '';
-      if (previewBox) previewBox.style.display = 'none';
-      if (uploadPrompt) uploadPrompt.style.display = 'block';
-      // Abre o seletor para escolher outra foto imediatamente
-      setTimeout(() => {
-        if (fileInput) fileInput.click();
-      }, 150);
     });
   }
 
@@ -385,8 +335,14 @@ function setupEventListeners() {
         return;
       }
 
-      if (!selectedPhotoBase64) {
+      if (!PhotoEditor.hasImage()) {
         showToast('Por favor, adicione uma foto da fantasia.');
+        return;
+      }
+
+      const fotoDataUrl = PhotoEditor.getImageDataUrl();
+      if (!fotoDataUrl) {
+        showToast('Erro ao processar imagem.');
         return;
       }
 
@@ -401,7 +357,7 @@ function setupEventListeners() {
             aluno,
             curso,
             fantasia,
-            foto: selectedPhotoBase64
+            foto: fotoDataUrl
           })
         });
         if (res.ok) {
@@ -423,7 +379,7 @@ function setupEventListeners() {
         aluno,
         curso,
         fantasia,
-        foto: selectedPhotoBase64
+        foto: fotoDataUrl
       });
 
       closeModal('registerModal');
@@ -437,14 +393,10 @@ function setupEventListeners() {
   document.querySelectorAll('.modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) {
-        if (overlay.id === 'cropModal') {
-          PhotoCropper.cancel();
-        } else {
-          overlay.classList.remove('active');
-          const otherActive = document.querySelector('.modal-overlay.active');
-          if (!otherActive) {
-            document.body.style.overflow = '';
-          }
+        overlay.classList.remove('active');
+        const otherActive = document.querySelector('.modal-overlay.active');
+        if (!otherActive) {
+          document.body.style.overflow = '';
         }
       }
     });

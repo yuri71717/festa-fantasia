@@ -582,238 +582,166 @@ button, input, select {
 }
 
 /* ==========================================================================
-   PREVIEW DA FOTO ENQUADRADA NO FORMULÁRIO
+   UPLOAD E EDITOR DE FOTO (INLINE NO FORMULÁRIO - MOBILE FIRST)
    ========================================================================== */
-.preview-box {
-  display: none;
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-top: 10px;
-  background: #000;
-  border: 1px solid var(--border-subtle);
+.upload-card {
+  border: 2px dashed var(--border-subtle);
+  background: var(--bg-input);
+  border-radius: 12px;
+  padding: 16px 12px;
+  text-align: center;
+  transition: border-color 0.15s ease;
 }
 
-.preview-box img {
-  width: 100%;
-  max-height: 280px;
-  object-fit: cover;
-  display: block;
-}
-
-.preview-actions-bar {
-  display: flex;
-  gap: 8px;
-  padding: 10px 12px;
-  background: rgba(16, 16, 20, 0.95);
-  border-top: 1px solid var(--border-subtle);
-}
-
-.btn-preview-action {
-  flex: 1;
-  background: #24242d;
-  color: #ffffff;
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  font-family: var(--font-family);
-  font-size: 0.82rem;
-  font-weight: 700;
-  padding: 8px 10px;
+.upload-prompt-view {
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: all 0.15s ease;
+  padding: 24px 12px;
 }
 
-.btn-preview-action:active {
-  background: var(--cps-red);
-  border-color: var(--cps-red);
-  transform: scale(0.98);
+.upload-prompt-view:active {
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.btn-preview-danger {
-  color: #ff6b6b;
+.upload-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
 }
 
-.btn-preview-danger:active {
-  background: rgba(255, 107, 107, 0.15);
-  color: #ff8787;
+.upload-card-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
-/* ==========================================================================
-   MODAL DE AJUSTE E ENQUADRAMENTO (CROPPER MOBILE FIRST)
-   ========================================================================== */
-.modal-crop-sheet {
-  max-height: 94vh !important;
-  background: #111116;
-}
-
-.crop-modal-inner {
-  padding: 14px 16px 20px 16px;
+/* Caixa do Editor quando há foto carregada */
+.photo-editor-box {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
-.crop-instructions-bar {
-  background: #181820;
+.editor-hint {
+  font-size: 0.78rem;
+  color: #d4d4d8;
+  background: #181822;
   border: 1px solid var(--border-subtle);
-  color: var(--text-gray);
-  font-size: 0.8rem;
-  font-weight: 600;
-  padding: 8px 12px;
+  padding: 6px 12px;
   border-radius: 6px;
-  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
 }
 
-/* Viewport com Proporção 4:5 */
-.crop-viewport-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 4px 0;
-}
-
-.crop-viewport {
+/* Viewport / Contêiner do Canvas 4:5 */
+.editor-canvas-container {
   position: relative;
   width: min(280px, 76vw);
   aspect-ratio: 4 / 5;
-  background-color: #050507;
+  margin: 0 auto;
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  background: #000;
+  border: 2px solid rgba(178, 31, 36, 0.8);
 }
 
-.crop-viewport:active {
+#editorCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  touch-action: none; /* Impede scroll da tela ao arrastar a foto */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#editorCanvas:active {
   cursor: grabbing;
 }
 
-#cropImage {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform-origin: center center;
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  will-change: transform;
-}
-
-/* Moldura e Grid no estilo Viewfinder Profissional */
-.crop-viewfinder-overlay {
+/* Moldura e Grid dos Terços */
+.editor-overlay-grid {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  border: 2px solid rgba(178, 31, 36, 0.85);
-  border-radius: 10px;
-  box-sizing: border-box;
 }
 
-.crop-ratio-badge {
+.editor-badge-ratio {
   position: absolute;
   top: 8px;
   right: 8px;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.8);
   color: #fff;
   font-size: 0.65rem;
   font-weight: 800;
   padding: 3px 6px;
   border-radius: 4px;
-  letter-spacing: 0.5px;
   border: 1px solid rgba(255, 255, 255, 0.15);
+  letter-spacing: 0.5px;
 }
 
-/* Cantos estilizados em vermelho institucional */
-.crop-corner {
+/* Cantoneiras Vermelho Centro Paula Souza */
+.grid-bracket {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-color: var(--cps-red);
   border-style: solid;
 }
 
-.crop-corner.top-left {
-  top: -2px;
-  left: -2px;
+.grid-bracket.top-left {
+  top: 0;
+  left: 0;
   border-width: 3px 0 0 3px;
-  border-top-left-radius: 10px;
+  border-top-left-radius: 8px;
 }
 
-.crop-corner.top-right {
-  top: -2px;
-  right: -2px;
+.grid-bracket.top-right {
+  top: 0;
+  right: 0;
   border-width: 3px 3px 0 0;
-  border-top-right-radius: 10px;
+  border-top-right-radius: 8px;
 }
 
-.crop-corner.bottom-left {
-  bottom: -2px;
-  left: -2px;
+.grid-bracket.bottom-left {
+  bottom: 0;
+  left: 0;
   border-width: 0 0 3px 3px;
-  border-bottom-left-radius: 10px;
+  border-bottom-left-radius: 8px;
 }
 
-.crop-corner.bottom-right {
-  bottom: -2px;
-  right: -2px;
+.grid-bracket.bottom-right {
+  bottom: 0;
+  right: 0;
   border-width: 0 3px 3px 0;
-  border-bottom-right-radius: 10px;
+  border-bottom-right-radius: 8px;
 }
 
-/* Linhas dos terços da câmera (grid suave) */
-.crop-grid-line {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.15);
-}
+/* Linhas dos Terços */
+.grid-rule-h1 { position: absolute; top: 33.33%; left: 0; right: 0; height: 1px; background: rgba(255, 255, 255, 0.12); }
+.grid-rule-h2 { position: absolute; top: 66.66%; left: 0; right: 0; height: 1px; background: rgba(255, 255, 255, 0.12); }
+.grid-rule-v1 { position: absolute; left: 33.33%; top: 0; bottom: 0; width: 1px; background: rgba(255, 255, 255, 0.12); }
+.grid-rule-v2 { position: absolute; left: 66.66%; top: 0; bottom: 0; width: 1px; background: rgba(255, 255, 255, 0.12); }
 
-.crop-grid-line.h1 { top: 33.33%; left: 0; right: 0; height: 1px; }
-.crop-grid-line.h2 { top: 66.66%; left: 0; right: 0; height: 1px; }
-.crop-grid-line.v1 { left: 33.33%; top: 0; bottom: 0; width: 1px; }
-.crop-grid-line.v2 { left: 66.66%; top: 0; bottom: 0; width: 1px; }
-
-/* Controles de Zoom */
-.crop-controls-group {
-  background: #16161c;
-  border: 1px solid var(--border-subtle);
-  border-radius: 8px;
-  padding: 12px 14px;
+/* Barra de Zoom */
+.editor-zoom-row {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 10px;
+  max-width: 300px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.crop-zoom-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-gray);
-}
-
-.crop-zoom-slider-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.btn-zoom-circle {
+.btn-circle-zoom {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #22222a;
+  background: #242430;
   border: 1px solid var(--border-subtle);
-  color: #fff;
+  color: #ffffff;
   font-size: 1.2rem;
   display: flex;
   align-items: center;
@@ -823,22 +751,22 @@ button, input, select {
   transition: all 0.15s ease;
 }
 
-.btn-zoom-circle:active {
+.btn-circle-zoom:active {
   background: var(--cps-red);
-  transform: scale(0.95);
+  transform: scale(0.94);
 }
 
-.crop-range-slider {
+.editor-zoom-slider {
   flex: 1;
   -webkit-appearance: none;
   appearance: none;
   height: 6px;
-  background: #282834;
+  background: #282836;
   border-radius: 3px;
   outline: none;
 }
 
-.crop-range-slider::-webkit-slider-thumb {
+.editor-zoom-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   width: 24px;
@@ -850,7 +778,7 @@ button, input, select {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
-.crop-range-slider::-moz-range-thumb {
+.editor-zoom-slider::-moz-range-thumb {
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -860,40 +788,46 @@ button, input, select {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
-/* Ações Rápidas (Girar e Centralizar) */
-.crop-quick-actions {
+/* Ações Rápidas */
+.editor-actions-bar {
   display: flex;
   gap: 8px;
+  max-width: 320px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.btn-crop-secondary {
+.btn-editor-btn {
   flex: 1;
-  background: #1c1c24;
+  background: #202028;
   color: #ffffff;
   border: 1px solid var(--border-subtle);
   font-family: var(--font-family);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  padding: 8px 10px;
+  padding: 8px 6px;
   border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   transition: background 0.15s ease;
 }
 
-.btn-crop-secondary:active {
-  background: #282834;
-  transform: scale(0.98);
+.btn-editor-btn:active {
+  background: #2e2e3a;
+  transform: scale(0.97);
 }
 
-/* Rodapé do Modal de Enquadramento */
-.crop-modal-footer {
-  display: flex;
-  gap: 10px;
-  margin-top: 4px;
+.btn-editor-change {
+  color: var(--text-gray);
+}
+
+.btn-editor-change:active {
+  color: #ffffff;
+  background: var(--cps-red);
+  border-color: var(--cps-red);
 }
 
 .btn-cps-primary {
