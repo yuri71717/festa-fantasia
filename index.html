@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <!-- Folha de Estilos Mobile-First Centro Paula Souza -->
-  <link rel="stylesheet" href="css/style.css?v=10.0">
+  <link rel="stylesheet" href="css/style.css?v=11.0">
 </head>
 <body>
 
@@ -47,6 +47,11 @@
           <span class="brand-sub-tag">ETEC • CENTRO PAULA SOUZA</span>
         </div>
       </a>
+
+      <!-- Botão Discreto de Moderação / ADM -->
+      <button class="btn-admin-header-lock" onclick="openAdminModal()" title="Painel da Moderação / ADM" aria-label="Painel de Moderação">
+        <i class="bi bi-shield-lock"></i>
+      </button>
     </div>
   </header>
 
@@ -110,6 +115,11 @@
   <!-- Rodapé Limpo -->
   <footer style="text-align: center; padding: 24px 16px 80px 16px; color: var(--text-gray); font-size: 0.82rem; border-top: 1px solid var(--border-subtle); max-width: 540px; margin: 0 auto;">
     <p>ETEC • Centro Paula Souza | Festa Fantasia 2026</p>
+    <div style="margin-top: 8px;">
+      <button type="button" class="btn-admin-footer" onclick="openAdminModal()">
+        <i class="bi bi-shield-lock"></i> Moderação / ADM
+      </button>
+    </div>
   </footer>
 
   <!-- ==========================================================================
@@ -278,9 +288,9 @@
   <div class="toast-box" id="toastNotice" role="status" aria-live="polite"></div>
 
   <!-- Scripts -->
-  <script src="js/storage.js?v=10.0"></script>
-  <script src="js/photo-editor.js?v=10.0"></script>
-  <script src="js/app.js?v=10.0"></script>
-  <script src="js/admin.js?v=10.0"></script>
+  <script src="js/storage.js?v=11.0"></script>
+  <script src="js/photo-editor.js?v=11.0"></script>
+  <script src="js/app.js?v=11.0"></script>
+  <script src="js/admin.js?v=11.0"></script>
 </body>
 </html>

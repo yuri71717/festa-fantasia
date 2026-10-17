@@ -89,12 +89,18 @@ function renderCostumes() {
  */
 function createCostumeCardHTML(item) {
   const hasVoted = FantasiaDB.hasVoted(item.id);
+  const isAdmin = (typeof isAdminLoggedIn !== 'undefined' && isAdminLoggedIn);
 
   return `
     <article class="costume-item" data-id="${item.id}">
       <div class="photo-holder" onclick="viewCostumeDetails('${item.id}')">
         <img src="${item.foto}" alt="${escapeHtml(item.fantasia)}" class="photo-img" loading="lazy">
         <span class="badge-corner">${escapeHtml(item.curso || 'ETEC')}</span>
+        ${isAdmin ? `
+          <button type="button" class="btn-admin-card-delete" onclick="event.stopPropagation(); deleteCostumeAdmin('${item.id}')" title="Excluir como Administrador">
+            <i class="bi bi-trash3-fill"></i> Excluir
+          </button>
+        ` : ''}
       </div>
 
       <div class="item-details">
@@ -211,6 +217,13 @@ function viewCostumeDetails(id) {
         ${hasVoted ? 'Você já votou' : 'Curtir'}
       </button>
     </div>
+    ${(typeof isAdminLoggedIn !== 'undefined' && isAdminLoggedIn) ? `
+      <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(248, 113, 113, 0.4); text-align: center;">
+        <button type="button" class="btn-admin-table-delete" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.88rem;" onclick="closeModal('detailsModal'); deleteCostumeAdmin('${item.id}');">
+          <i class="bi bi-trash3-fill"></i> Excluir Esta Foto como Administrador
+        </button>
+      </div>
+    ` : ''}
   `;
 
   openModal('detailsModal');

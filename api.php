@@ -185,5 +185,53 @@ if ($action === 'add') {
     exit;
 }
 
+// 4. Excluir fantasia (Apenas Administrador)
+if ($action === 'delete') {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $id = $input['id'] ?? null;
+    $senha = $input['senha'] ?? '';
+
+    // Senha padrão de administrador
+    if ($senha !== 'admin') {
+        echo json_encode(['success' => false, 'message' => 'Senha de administrador inválida']);
+        exit;
+    }
+
+    if (!$id) {
+        echo json_encode(['success' => false, 'message' => 'ID não informado']);
+        exit;
+    }
+
+    $data = loadData($dataFile, $defaultFantasias);
+    $newData = [];
+    $found = false;
+    $removedPhoto = null;
+
+    foreach ($data as $item) {
+        if ($item['id'] === $id) {
+            $found = true;
+            $removedPhoto = $item['foto'] ?? null;
+        } else {
+            $newData[] = $item;
+        }
+    }
+
+    if ($found) {
+        // Se a foto estava salva na pasta uploads/, remove o arquivo físico
+        if ($removedPhoto && strpos($removedPhoto, 'uploads/') === 0) {
+            $realPath = __DIR__ . '/' . $removedPhoto;
+            if (file_exists($realPath)) {
+                @unlink($realPath);
+            }
+        }
+
+        saveData($dataFile, $newData);
+        echo json_encode(['success' => true, 'message' => 'Fantasia excluída com sucesso', 'id' => $id]);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Fantasia não encontrada']);
+    }
+    exit;
+}
+
 // Ação desconhecida
 echo json_encode(['success' => false, 'message' => 'Ação inválida']);

@@ -887,3 +887,94 @@ button, input, select {
   opacity: 1;
   visibility: visible;
 }
+
+/* ==========================================================================
+   PAINEL E MODOS DE MODERAÇÃO / ADM
+   ========================================================================== */
+.btn-admin-header-lock {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-gray);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-admin-header-lock:active {
+  background: rgba(178, 31, 36, 0.25);
+  color: #ffffff;
+  border-color: var(--cps-red);
+}
+
+.btn-admin-footer {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  font-family: var(--font-family);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-admin-footer:active {
+  color: #fff;
+  border-color: var(--cps-red);
+}
+
+.btn-admin-card-delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(220, 38, 38, 0.94);
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-family);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+  transition: transform 0.15s ease;
+}
+
+.btn-admin-card-delete:active {
+  transform: scale(0.94);
+  background: #b91c1c;
+}
+
+.btn-admin-table-delete {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  font-family: var(--font-family);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.btn-admin-table-delete:active {
+  background: #ef4444;
+  color: #ffffff;
+}
