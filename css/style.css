@@ -1,0 +1,673 @@
+/* ==========================================================================
+   FESTA FANTASIA ETEC - DESIGN MOBILE FIRST (CENTRO PAULA SOUZA)
+   Cores: Preto, Branco e Vermelho CPS
+   Otimizado especificamente para smartphones (fluido, rápido e tátil)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --cps-red: #b21f24;
+  --cps-red-hover: #c92a2a;
+  --cps-red-dark: #8c1418;
+
+  --bg-black: #0c0c0f;
+  --bg-card: #141418;
+  --bg-card-hover: #1c1c22;
+  --bg-input: #101014;
+
+  --border-subtle: #24242d;
+  --border-active: #b21f24;
+
+  --text-white: #ffffff;
+  --text-gray: #a1a1aa;
+  --text-muted: #71717a;
+
+  --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --bottom-bar-height: 64px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  background-color: var(--bg-black);
+  color: var(--text-white);
+  font-family: var(--font-family);
+  min-height: 100vh;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px) + 28px);
+}
+
+button, input, select {
+  touch-action: manipulation;
+}
+
+/* ==========================================================================
+   BARRA SUPERIOR (HEADER MOBILE APP)
+   ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(12, 12, 15, 0.98);
+  border-bottom: 2px solid var(--cps-red);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.header-inner {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.cps-logo-badge {
+  background: #ffffff;
+  padding: 3px 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+}
+
+.cps-logo-img {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-title-main {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.brand-sub-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-gray);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   BANNER DE INTRODUÇÃO (COMPACTO PARA CELULAR)
+   ========================================================================== */
+.hero-container {
+  max-width: 540px;
+  margin: 14px auto 10px auto;
+  padding: 0 16px;
+}
+
+.hero-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-left: 4px solid var(--cps-red);
+  border-radius: 10px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hero-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--cps-red);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.hero-heading {
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+  color: #ffffff;
+}
+
+.hero-description {
+  color: var(--text-gray);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.hero-courses-list {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.badge-course {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #18181e;
+  color: #d4d4d8;
+  border: 1px solid var(--border-subtle);
+}
+
+.btn-mobile-hero {
+  margin-top: 6px;
+  background: var(--cps-red);
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-family);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(178, 31, 36, 0.25);
+  transition: background 0.15s ease;
+}
+
+.btn-mobile-hero:active {
+  background: var(--cps-red-hover);
+  transform: scale(0.98);
+}
+
+/* ==========================================================================
+   BARRA DE FILTROS E PESQUISA NO CELULAR
+   ========================================================================== */
+.content-wrapper {
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 0 16px 80px 16px;
+}
+
+.controls-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-container i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.search-input {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: #ffffff;
+  font-family: var(--font-family);
+  font-size: 16px;
+  padding: 11px 14px 11px 38px;
+  border-radius: 8px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: var(--cps-red);
+}
+
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 2px;
+}
+
+.filter-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.pill-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-gray);
+  font-family: var(--font-family);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 99px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+.pill-btn:active, .pill-btn.active {
+  background: var(--cps-red);
+  color: #ffffff;
+  border-color: var(--cps-red);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   FEED DE FANTASIAS (CARD VERTICAL OTIMIZADO PARA TOUCH)
+   ========================================================================== */
+.costume-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.costume-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.photo-holder {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 4.5;
+  background-color: #000;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.badge-corner {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: rgba(12, 12, 15, 0.92);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.item-details {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.item-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.item-student {
+  font-size: 0.86rem;
+  color: var(--text-gray);
+  margin-bottom: 12px;
+}
+
+.item-action-row {
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.votes-indicator {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* Botão de Curtir Grande para o Polegar */
+.btn-like {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-family);
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 10px 20px;
+  min-height: 44px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.btn-like:active {
+  transform: scale(0.96);
+}
+
+.btn-like.voted {
+  background: var(--cps-red);
+  border-color: var(--cps-red);
+  color: #ffffff;
+  cursor: default;
+}
+
+/* ==========================================================================
+   BARRA INFERIOR FIXA DO APLICATIVO (BOTTOM BAR)
+   ========================================================================== */
+.mobile-nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 540px;
+  min-height: var(--bottom-bar-height);
+  background: rgba(18, 18, 22, 0.98);
+  border-top: 1px solid var(--border-subtle);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 1500;
+  padding: 8px 16px calc(8px + env(safe-area-inset-bottom, 0px)) 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-item {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 10px 14px;
+}
+
+.nav-fab-btn {
+  background: var(--cps-red);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(178, 31, 36, 0.35);
+}
+
+.nav-fab-btn:active {
+  transform: scale(0.97);
+}
+
+/* ==========================================================================
+   MODAIS (ESTILO BOTTOM SHEET NO CELULAR)
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: var(--bg-card);
+  border-radius: 16px 16px 0 0;
+  border-top: 3px solid var(--cps-red);
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6);
+  transform: translateY(100%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.active .modal-content {
+  transform: translateY(0);
+}
+
+.modal-top {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title-text {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: var(--text-gray);
+  font-size: 1.3rem;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-inner {
+  padding: 20px 18px;
+}
+
+/* Formulário de Cadastro */
+.field-box {
+  margin-bottom: 16px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-gray);
+  margin-bottom: 6px;
+}
+
+.field-label span {
+  color: var(--cps-red);
+}
+
+.input-text, .input-select {
+  width: 100%;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  color: #ffffff;
+  font-family: var(--font-family);
+  font-size: 16px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  outline: none;
+}
+
+.input-text:focus, .input-select:focus {
+  border-color: var(--cps-red);
+}
+
+.input-select option {
+  background: var(--bg-card);
+  color: #ffffff;
+}
+
+/* Upload de Foto na Câmera */
+.upload-card {
+  border: 2px dashed var(--border-subtle);
+  background: var(--bg-input);
+  border-radius: 8px;
+  padding: 22px 14px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.upload-card:active {
+  border-color: var(--cps-red);
+}
+
+.upload-card-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.upload-card-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.preview-box {
+  display: none;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 10px;
+  max-height: 240px;
+  background: #000;
+}
+
+.preview-box img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+
+.btn-trash-photo {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.75);
+  border: none;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-cps-primary {
+  background: var(--cps-red);
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-family);
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-cps-outline {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-family);
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Toast */
+.toast-box {
+  position: fixed;
+  bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px) + 16px);
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg-card);
+  border: 1px solid var(--cps-red);
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  z-index: 3000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.toast-box.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
