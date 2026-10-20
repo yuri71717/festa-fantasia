@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
   --cps-red: #b21f24;
@@ -42,9 +42,6 @@ button, input, select {
   touch-action: manipulation;
 }
 
-/* ==========================================================================
-   BARRA SUPERIOR (HEADER MOBILE APP)
-   ========================================================================== */
 .site-header {
   position: sticky;
   top: 0;
@@ -110,9 +107,6 @@ button, input, select {
   text-transform: uppercase;
 }
 
-/* ==========================================================================
-   BANNER DE INTRODUÇÃO (COMPACTO PARA CELULAR)
-   ========================================================================== */
 .hero-container {
   max-width: 540px;
   margin: 14px auto 10px auto;
@@ -194,9 +188,6 @@ button, input, select {
   transform: scale(0.98);
 }
 
-/* ==========================================================================
-   BARRA DE FILTROS E PESQUISA NO CELULAR
-   ========================================================================== */
 .content-wrapper {
   max-width: 540px;
   margin: 0 auto;
@@ -274,9 +265,6 @@ button, input, select {
   font-weight: 700;
 }
 
-/* ==========================================================================
-   FEED DE FANTASIAS (CARD VERTICAL OTIMIZADO PARA TOUCH)
-   ========================================================================== */
 .costume-grid {
   display: flex;
   flex-direction: column;
@@ -355,7 +343,6 @@ button, input, select {
   color: #ffffff;
 }
 
-/* Botão de Curtir Grande para o Polegar */
 .btn-like {
   background: transparent;
   color: #ffffff;
@@ -385,9 +372,6 @@ button, input, select {
   cursor: default;
 }
 
-/* ==========================================================================
-   BARRA INFERIOR FIXA DO APLICATIVO (BOTTOM BAR)
-   ========================================================================== */
 .mobile-nav-bar {
   position: fixed;
   bottom: 0;
@@ -439,9 +423,6 @@ button, input, select {
   transform: scale(0.97);
 }
 
-/* ==========================================================================
-   MODAIS (ESTILO BOTTOM SHEET NO CELULAR)
-   ========================================================================== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -511,7 +492,6 @@ button, input, select {
   padding: 20px 18px;
 }
 
-/* Formulário de Cadastro */
 .field-box {
   margin-bottom: 16px;
 }
@@ -549,7 +529,6 @@ button, input, select {
   color: #ffffff;
 }
 
-/* Upload de Foto na Câmera */
 .upload-card {
   border: 2px dashed var(--border-subtle);
   background: var(--bg-input);
@@ -575,9 +554,6 @@ button, input, select {
   color: var(--text-muted);
 }
 
-/* ==========================================================================
-   UPLOAD E EDITOR DE FOTO (INLINE NO FORMULÁRIO - MOBILE FIRST)
-   ========================================================================== */
 .upload-card {
   border: 2px dashed var(--border-subtle);
   background: var(--bg-input);
@@ -608,7 +584,6 @@ button, input, select {
   color: var(--text-muted);
 }
 
-/* Caixa do Editor quando há foto carregada */
 .photo-editor-box {
   display: flex;
   flex-direction: column;
@@ -628,7 +603,6 @@ button, input, select {
   gap: 6px;
 }
 
-/* Viewport / Contêiner do Canvas 4:5 */
 .editor-canvas-container {
   position: relative;
   width: min(280px, 76vw);
@@ -646,7 +620,7 @@ button, input, select {
   height: 100%;
   display: block;
   cursor: grab;
-  touch-action: none; /* Impede scroll da tela ao arrastar a foto */
+  touch-action: none; 
   user-select: none;
   -webkit-user-select: none;
 }
@@ -655,7 +629,6 @@ button, input, select {
   cursor: grabbing;
 }
 
-/* Moldura e Grid dos Terços */
 .editor-overlay-grid {
   position: absolute;
   inset: 0;
@@ -676,7 +649,6 @@ button, input, select {
   letter-spacing: 0.5px;
 }
 
-/* Cantoneiras Vermelho Centro Paula Souza */
 .grid-bracket {
   position: absolute;
   width: 14px;
@@ -713,13 +685,11 @@ button, input, select {
   border-bottom-right-radius: 8px;
 }
 
-/* Linhas dos Terços */
 .grid-rule-h1 { position: absolute; top: 33.33%; left: 0; right: 0; height: 1px; background: rgba(255, 255, 255, 0.12); }
 .grid-rule-h2 { position: absolute; top: 66.66%; left: 0; right: 0; height: 1px; background: rgba(255, 255, 255, 0.12); }
 .grid-rule-v1 { position: absolute; left: 33.33%; top: 0; bottom: 0; width: 1px; background: rgba(255, 255, 255, 0.12); }
 .grid-rule-v2 { position: absolute; left: 66.66%; top: 0; bottom: 0; width: 1px; background: rgba(255, 255, 255, 0.12); }
 
-/* Barra de Zoom */
 .editor-zoom-row {
   display: flex;
   align-items: center;
@@ -782,7 +752,6 @@ button, input, select {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
-/* Ações Rápidas */
 .editor-actions-bar {
   display: flex;
   gap: 8px;
@@ -855,7 +824,6 @@ button, input, select {
   justify-content: center;
 }
 
-/* Toast */
 .toast-box {
   position: fixed;
   bottom: calc(var(--bottom-bar-height) + env(safe-area-inset-bottom, 0px) + 16px);
@@ -882,9 +850,6 @@ button, input, select {
   visibility: visible;
 }
 
-/* ==========================================================================
-   PAINEL E MODOS DE MODERAÇÃO / ADM
-   ========================================================================== */
 .btn-admin-header-lock {
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.15);

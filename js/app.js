@@ -1,4 +1,4 @@
-let currentCourseFilter = 'all';
+﻿let currentCourseFilter = 'all';
 let currentSearch = '';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -212,7 +212,6 @@ function resetRegisterForm() {
 }
 
 function setupEventListeners() {
-  // Filtros por Curso
   const pills = document.querySelectorAll('.pill-btn');
   pills.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -222,8 +221,6 @@ function setupEventListeners() {
       renderCostumes();
     });
   });
-
-  // Busca
   const searchInput = document.getElementById('searchCostume');
   if (searchInput) {
     searchInput.addEventListener('input', (e) => {
@@ -231,8 +228,6 @@ function setupEventListeners() {
       renderCostumes();
     });
   }
-
-  // Upload e Seleção de Foto
   const fileInput = document.getElementById('costumePhotoInput');
   const uploadPrompt = document.getElementById('uploadPrompt');
   const btnChangePhoto = document.getElementById('btnChangePhoto');
@@ -266,8 +261,6 @@ function setupEventListeners() {
       }
     });
   }
-
-  // Formulário de Cadastro
   const formRegister = document.getElementById('formRegister');
   if (formRegister) {
     formRegister.addEventListener('submit', (e) => {
@@ -311,8 +304,6 @@ function setupEventListeners() {
       renderCostumes();
     });
   }
-
-  // Fechar modal ao clicar fora
   document.querySelectorAll('.modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) {
@@ -324,8 +315,6 @@ function setupEventListeners() {
       }
     });
   });
-
-  // Fechar modal com tecla Esc
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       const activeModal = document.querySelector('.modal-overlay.active');
@@ -334,8 +323,6 @@ function setupEventListeners() {
       }
     }
   });
-
-  // Atalho do Administrador: Ctrl + Shift + A
   document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
       openAdminModal();

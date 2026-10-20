@@ -1,6 +1,6 @@
-const PhotoEditor = (function () {
+﻿const PhotoEditor = (function () {
   const CANVAS_WIDTH = 640;
-  const CANVAS_HEIGHT = 800; // Proporção 4:5 oficial
+  const CANVAS_HEIGHT = 800;
 
   let container = null;
   let canvas = null;
@@ -8,19 +8,13 @@ const PhotoEditor = (function () {
   let zoomSlider = null;
   let uploadPrompt = null;
   let loadedImg = null;
-
-  // Estado do enquadramento
   let zoom = 1.0;
   let offsetX = 0;
   let offsetY = 0;
-  let rotation = 0; // 0, 90, 180, 270
-
-  // Controle de arrasto (Touch / Mouse)
+  let rotation = 0;
   let isDragging = false;
   let lastX = 0;
   let lastY = 0;
-
-  // Controle de pinça (Pinch)
   let isPinching = false;
   let pinchStartDist = 0;
   let pinchStartZoom = 1.0;
@@ -38,14 +32,11 @@ const PhotoEditor = (function () {
   }
 
   function setupControls() {
-    // Zoom Slider
     if (zoomSlider) {
       zoomSlider.addEventListener('input', (e) => {
         setZoom(parseFloat(e.target.value));
       });
     }
-
-    // Botões Zoom + e -
     const btnZoomIn = document.getElementById('btnZoomIn');
     const btnZoomOut = document.getElementById('btnZoomOut');
     if (btnZoomIn) {
@@ -60,8 +51,6 @@ const PhotoEditor = (function () {
         setZoom(zoom - 0.15);
       });
     }
-
-    // Botão Girar 90°
     const btnRotate = document.getElementById('btnRotatePhoto');
     if (btnRotate) {
       btnRotate.addEventListener('click', (e) => {
@@ -69,8 +58,6 @@ const PhotoEditor = (function () {
         rotate90();
       });
     }
-
-    // Botão Centralizar / Reset
     const btnReset = document.getElementById('btnResetCrop');
     if (btnReset) {
       btnReset.addEventListener('click', (e) => {
@@ -78,19 +65,13 @@ const PhotoEditor = (function () {
         resetPosition();
       });
     }
-
-    // Eventos de Mouse no Canvas
     canvas.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
-
-    // Scroll do Mouse para Zoom
     canvas.addEventListener('wheel', (e) => {
       e.preventDefault();
       setZoom(zoom + (e.deltaY < 0 ? 0.1 : -0.1));
     }, { passive: false });
-
-    // Eventos de Toque (Touch no Celular)
     canvas.addEventListener('touchstart', onTouchStart, { passive: false });
     canvas.addEventListener('touchmove', onTouchMove, { passive: false });
     canvas.addEventListener('touchend', onTouchEnd);
@@ -187,15 +168,11 @@ const PhotoEditor = (function () {
 
     const drawnW = effW * totalScale;
     const drawnH = effH * totalScale;
-
-    // Trava para a foto não sair das bordas
     const maxOffsetX = Math.max(0, (drawnW - CANVAS_WIDTH) / 2);
     const maxOffsetY = Math.max(0, (drawnH - CANVAS_HEIGHT) / 2);
 
     offsetX = Math.max(-maxOffsetX, Math.min(maxOffsetX, offsetX));
     offsetY = Math.max(-maxOffsetY, Math.min(maxOffsetY, offsetY));
-
-    // Renderiza
     ctx.fillStyle = '#0c0c0f';
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
@@ -212,8 +189,6 @@ const PhotoEditor = (function () {
     );
     ctx.restore();
   }
-
-  // --- Handlers de Mouse ---
   function onMouseDown(e) {
     if (e.button !== 0 || !loadedImg) return;
     isDragging = true;
@@ -243,8 +218,6 @@ const PhotoEditor = (function () {
     isDragging = false;
     if (canvas) canvas.style.cursor = 'grab';
   }
-
-  // --- Handlers de Touch (Celular) ---
   function onTouchStart(e) {
     if (!loadedImg) return;
     if (e.touches.length === 1) {
@@ -265,7 +238,7 @@ const PhotoEditor = (function () {
 
   function onTouchMove(e) {
     if (!loadedImg) return;
-    e.preventDefault(); // Impede scroll da tela enquanto arrasta na foto
+    e.preventDefault();
 
     if (isDragging && e.touches.length === 1) {
       const rect = canvas.getBoundingClientRect();
