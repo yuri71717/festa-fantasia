@@ -1,43 +1,12 @@
-/**
- * Festa Fantasia ETEC - Aplicação Principal
- * Curtidas 100% persistentes salvas no servidor (api.php / dados.json)
- */
-
-document.addEventListener('DOMContentLoaded', () => {
-  initApp();
-});
-
 let currentCourseFilter = 'all';
 let currentSearch = '';
-let selectedPhotoBase64 = null;
 
-async function initApp() {
-  await loadServerData();
+document.addEventListener('DOMContentLoaded', () => {
+  renderCostumes();
   setupEventListeners();
   checkSecretAdmin();
-}
+});
 
-/**
- * Carrega os dados reais do servidor com as curtidas salvas
- */
-async function loadServerData() {
-  try {
-    const res = await fetch('api.php?action=get');
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success && Array.isArray(data.fantasias)) {
-        localStorage.setItem(STORAGE_KEYS.FANTASIAS, JSON.stringify(data.fantasias));
-      }
-    }
-  } catch (e) {
-    // Se não estiver em servidor PHP (ex: GitHub Pages), usa dados do localStorage
-  }
-  renderCostumes();
-}
-
-/**
- * Renderiza o mural de fantasias
- */
 function renderCostumes() {
   const grid = document.getElementById('costumeGrid');
   const counterEl = document.getElementById('costumesCount');
@@ -45,7 +14,7 @@ function renderCostumes() {
 
   const allCostumes = FantasiaDB.getCostumes();
 
-  let filtered = allCostumes.filter(item => {
+  const filtered = allCostumes.filter(item => {
     let matchCourse = true;
     if (currentCourseFilter !== 'all') {
       matchCourse = item.curso === currentCourseFilter;
@@ -71,10 +40,11 @@ function renderCostumes() {
   if (filtered.length === 0) {
     grid.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; padding: 48px 20px; background: var(--bg-card); border: 1px dashed var(--border-subtle); border-radius: 8px;">
+        <i class="bi bi-camera" style="font-size: 2.2rem; color: var(--text-gray); display: block; margin-bottom: 8px;"></i>
         <h3 style="font-size: 1.15rem; margin-bottom: 6px;">Nenhuma fantasia encontrada</h3>
-        <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 16px;">Seja o primeiro a postar uma foto neste curso!</p>
-        <button class="btn-cps-primary" onclick="openRegisterModal()">
-          Publicar Fantasia
+        <p style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 16px;">Seja o primeiro a publicar uma foto!</p>
+        <button type="button" class="btn-cps-primary" onclick="openRegisterModal()">
+          <i class="bi bi-camera-fill"></i> Publicar Fantasia
         </button>
       </div>
     `;
@@ -84,9 +54,6 @@ function renderCostumes() {
   grid.innerHTML = filtered.map(item => createCostumeCardHTML(item)).join('');
 }
 
-/**
- * Gera o card da fantasia com visual básico e neutro
- */
 function createCostumeCardHTML(item) {
   const hasVoted = FantasiaDB.hasVoted(item.id);
   const isAdmin = (typeof isAdminLoggedIn !== 'undefined' && isAdminLoggedIn);
@@ -115,7 +82,7 @@ function createCostumeCardHTML(item) {
           <div class="votes-indicator">
             <span id="votes-${item.id}">${item.votos || 0}</span> curtidas
           </div>
-          <button class="btn-like ${hasVoted ? 'voted' : ''}" 
+          <button type="button" class="btn-like ${hasVoted ? 'voted' : ''}" 
                   onclick="handleVote('${item.id}', this)"
                   ${hasVoted ? 'disabled' : ''}>
             <i class="bi ${hasVoted ? 'bi-heart-fill' : 'bi-heart'}"></i>
@@ -127,36 +94,17 @@ function createCostumeCardHTML(item) {
   `;
 }
 
-/**
- * Curtir fantasia (persistência real no servidor e no navegador)
- */
-async function handleVote(id, btnElement) {
+function handleVote(id, btnElement) {
   if (FantasiaDB.hasVoted(id)) {
     showToast('Você já curtiu esta fantasia!');
     return;
   }
 
-  let serverVotes = null;
-
-  // 1. Envia para o servidor salvar no dados.json
-  try {
-    const res = await fetch('api.php?action=vote', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: id })
-    });
-    if (res.ok) {
-      const data = await res.json();
-      if (data.success && typeof data.newVotes === 'number') {
-        serverVotes = data.newVotes;
-      }
-    }
-  } catch (err) {
-    // Modo offline/estático
+  const result = FantasiaDB.vote(id);
+  if (!result.success) {
+    showToast(result.message || 'Erro ao registrar curtida.');
+    return;
   }
-
-  // 2. Registra o voto e atualiza o contador na tela
-  const result = FantasiaDB.vote(id, serverVotes);
 
   const votesSpan = document.getElementById(`votes-${id}`);
   if (votesSpan) {
@@ -177,9 +125,6 @@ async function handleVote(id, btnElement) {
   showToast('Curtida confirmada!');
 }
 
-/**
- * Visualizar foto ampliada
- */
 function viewCostumeDetails(id) {
   const all = FantasiaDB.getCostumes();
   const item = all.find(c => c.id === id);
@@ -190,6 +135,7 @@ function viewCostumeDetails(id) {
   if (!modal || !detailsContent) return;
 
   const hasVoted = FantasiaDB.hasVoted(item.id);
+  const isAdmin = (typeof isAdminLoggedIn !== 'undefined' && isAdminLoggedIn);
 
   detailsContent.innerHTML = `
     <div style="text-align: center; margin-bottom: 14px;">
@@ -202,25 +148,25 @@ function viewCostumeDetails(id) {
       ${escapeHtml(item.fantasia)}
     </h2>
     <div style="color: var(--text-gray); font-size: 0.95rem; margin-bottom: 16px;">
-      Participante: <strong style="color: #ffffff;">${escapeHtml(item.aluno)}</strong>
+      Aluno(a): <strong style="color: #ffffff;">${escapeHtml(item.aluno)}</strong>
     </div>
 
     <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border-subtle); padding-top: 14px;">
       <div style="font-size: 1rem; font-weight: 700; color: #ffffff;">
         <span id="modal-votes-${item.id}">${item.votos || 0}</span> curtidas
       </div>
-      <button class="btn-like ${hasVoted ? 'voted' : ''}" 
+      <button type="button" class="btn-like ${hasVoted ? 'voted' : ''}" 
               style="padding: 8px 16px; font-size: 0.9rem;"
               onclick="handleVote('${item.id}', this)"
               ${hasVoted ? 'disabled' : ''}>
         <i class="bi ${hasVoted ? 'bi-heart-fill' : 'bi-heart'}"></i>
-        ${hasVoted ? 'Você já votou' : 'Curtir'}
+        ${hasVoted ? 'Votado' : 'Curtir'}
       </button>
     </div>
-    ${(typeof isAdminLoggedIn !== 'undefined' && isAdminLoggedIn) ? `
+    ${isAdmin ? `
       <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(248, 113, 113, 0.4); text-align: center;">
         <button type="button" class="btn-admin-table-delete" style="width: 100%; justify-content: center; padding: 10px; font-size: 0.88rem;" onclick="closeModal('detailsModal'); deleteCostumeAdmin('${item.id}');">
-          <i class="bi bi-trash3-fill"></i> Excluir Esta Foto como Administrador
+          <i class="bi bi-trash3-fill"></i> Excluir Foto
         </button>
       </div>
     ` : ''}
@@ -229,9 +175,6 @@ function viewCostumeDetails(id) {
   openModal('detailsModal');
 }
 
-/**
- * Modais
- */
 function openModal(id) {
   const modal = document.getElementById(id);
   if (modal) {
@@ -268,11 +211,8 @@ function resetRegisterForm() {
   }
 }
 
-/**
- * Event Listeners
- */
 function setupEventListeners() {
-  // Filtros por Cursos
+  // Filtros por Curso
   const pills = document.querySelectorAll('.pill-btn');
   pills.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -292,7 +232,7 @@ function setupEventListeners() {
     });
   }
 
-  // Upload e Editor Interativo de Foto
+  // Upload e Seleção de Foto
   const fileInput = document.getElementById('costumePhotoInput');
   const uploadPrompt = document.getElementById('uploadPrompt');
   const btnChangePhoto = document.getElementById('btnChangePhoto');
@@ -314,16 +254,15 @@ function setupEventListeners() {
       if (!file) return;
 
       if (!file.type.startsWith('image/')) {
-        showToast('Por favor, envie um arquivo de imagem.');
+        showToast('Por favor, escolha um arquivo de imagem.');
         return;
       }
 
       showToast('Carregando foto...');
       try {
         await PhotoEditor.loadImage(file);
-        showToast('Foto carregada! Arraste para posicionar.');
       } catch (err) {
-        showToast('Erro ao abrir foto: ' + err.message);
+        showToast('Erro ao abrir imagem: ' + err.message);
       }
     });
   }
@@ -331,7 +270,7 @@ function setupEventListeners() {
   // Formulário de Cadastro
   const formRegister = document.getElementById('formRegister');
   if (formRegister) {
-    formRegister.addEventListener('submit', async (e) => {
+    formRegister.addEventListener('submit', (e) => {
       e.preventDefault();
 
       const aluno = document.getElementById('inputAluno').value.trim();
@@ -339,53 +278,24 @@ function setupEventListeners() {
       const fantasia = document.getElementById('inputFantasia').value.trim();
 
       if (!aluno) {
-        showToast('Digite seu nome completo.');
+        showToast('Informe o seu nome.');
         return;
       }
 
       if (!fantasia) {
-        showToast('Digite o nome da fantasia.');
+        showToast('Informe o nome da fantasia.');
         return;
       }
 
       if (!PhotoEditor.hasImage()) {
-        showToast('Por favor, adicione uma foto da fantasia.');
+        showToast('Selecione ou tire uma foto da fantasia.');
         return;
       }
 
       const fotoDataUrl = PhotoEditor.getImageDataUrl();
       if (!fotoDataUrl) {
-        showToast('Erro ao processar imagem.');
+        showToast('Erro ao processar a imagem.');
         return;
-      }
-
-      showToast('Enviando...');
-
-      // Tenta salvar via api.php no servidor
-      try {
-        const res = await fetch('api.php?action=add', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            aluno,
-            curso,
-            fantasia,
-            foto: fotoDataUrl
-          })
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success && data.fantasia) {
-            FantasiaDB.addCostume(data.fantasia);
-            closeModal('registerModal');
-            resetRegisterForm();
-            showToast('Fantasia publicada com sucesso!');
-            await loadServerData();
-            return;
-          }
-        }
-      } catch (err) {
-        // Fallback local
       }
 
       FantasiaDB.addCostume({
@@ -397,12 +307,12 @@ function setupEventListeners() {
 
       closeModal('registerModal');
       resetRegisterForm();
-      showToast('Fantasia publicada com sucesso!');
+      showToast('Fantasia publicada!');
       renderCostumes();
     });
   }
 
-  // Fechar no clique fora
+  // Fechar modal ao clicar fora
   document.querySelectorAll('.modal-overlay').forEach(overlay => {
     overlay.addEventListener('click', (e) => {
       if (e.target === overlay) {
@@ -415,18 +325,17 @@ function setupEventListeners() {
     });
   });
 
-  // Mobile Bottom Navigation
-  const mobileNavItems = document.querySelectorAll('.mobile-nav-bar .nav-item');
-  mobileNavItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const target = item.dataset.target;
-      if (target === 'feed') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Fechar modal com tecla Esc
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const activeModal = document.querySelector('.modal-overlay.active');
+      if (activeModal) {
+        closeModal(activeModal.id);
       }
-    });
+    }
   });
 
-  // Atalho de teclado secreto para Administrador: Ctrl + Shift + A
+  // Atalho do Administrador: Ctrl + Shift + A
   document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
       openAdminModal();
@@ -434,9 +343,6 @@ function setupEventListeners() {
   });
 }
 
-/**
- * Permite acessar o Admin discretamente via URL: ?admin=1
- */
 function checkSecretAdmin() {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('admin') === '1') {

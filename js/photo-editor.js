@@ -1,9 +1,3 @@
-/**
- * Festa Fantasia ETEC - Editor Interativo de Foto (Canvas Mobile-First)
- * Permite ao usuário arrastar (pan), aplicar zoom e girar a foto
- * diretamente no formulário, sem modais sobrepostos ou bugs de enquadramento.
- */
-
 const PhotoEditor = (function () {
   const CANVAS_WIDTH = 640;
   const CANVAS_HEIGHT = 800; // Proporção 4:5 oficial
